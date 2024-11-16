@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-@ModelÇ
+@Model
 final class Ingredient {
     var name: String
     var unit: Unit

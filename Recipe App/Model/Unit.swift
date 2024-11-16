@@ -13,15 +13,23 @@ import SwiftData
 @Model
 final class Unit {
     var name: String
-    var type: UnitType = UnitType.nonConvertable
-    
+    var typeRawValue: String // For persistence
+
+    // Computed property to access the enum
+    var type: UnitType {
+        get { UnitType(rawValue: typeRawValue) ?? .nonConvertable }
+        set { typeRawValue = newValue.rawValue }
+    }
+
+    enum UnitType: String { // Backed by String for persistence
+        case convertable
+        case nonConvertable
+    }
+
     init(name: String, type: UnitType) {
         self.name = name
-        self.type = type
+        self.typeRawValue = type.rawValue
     }
     
-    enum UnitType {
-        case convertable;
-        case nonConvertable;
-    }
+
 }

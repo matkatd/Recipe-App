@@ -16,22 +16,21 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             List {
+                NavigationLink {
+                    RecipeListView(category: Category(name: "All recipes"), recipes: recipes)
+                } label: {
+                    Text("All Recipes")
+                }
                 ForEach(categories) { category in
                     NavigationLink {
-                        Text("\(category.name)")
+                        RecipeListView(category: category, recipes: recipes.filter { $0.categories?.contains(category) ?? false })
                     } label: {
                         Text("\(category.name)")
                     }
                 }
                 
-//                ForEach(recipes) { recipe in
-//                    NavigationLink {
-//                        Text("Recipe \(recipe.title)")
-//                    } label: {
-//                        Text("\(recipe.title)")
-//                    }
-//                }
-//                .onDelete(perform: deleteItems)
+                
+
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -50,6 +49,7 @@ struct ContentView: View {
 
     private func addItem() {
         withAnimation {
+            print("making new item")
             let newItem = Recipe(title: "cool recipe \(Int.random(in: 1..<100))", ingredients: [Ingredient(name: "Garlic", unit: Unit(name: "clove(s)", type: Unit.UnitType.nonConvertable), amount: 2)], instructions: ["some instructions"])
             modelContext.insert(newItem)
         }

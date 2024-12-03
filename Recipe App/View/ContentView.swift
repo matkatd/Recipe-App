@@ -9,58 +9,58 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var recipes: [Recipe]
-    @Query private var categories: [Category]
+    @Environment(RecipeViewModel.self) private var viewModel
+    
+    @State private var searchString: String = ""
+    @State private var isCreateRecipeShowing = false
 
     var body: some View {
         NavigationSplitView {
             List {
                 NavigationLink {
-                    RecipeListView(category: Category(name: "All recipes"), recipes: recipes)
+                    RecipeListView(category: Category(name: "All recipes"), recipes: viewModel.recipes)
                 } label: {
-                    Text("All Recipes")
+                    Text("All Recipes (\(viewModel.recipes.count))")
                 }
-                ForEach(categories) { category in
+                ForEach(viewModel.categories) { category in
                     NavigationLink {
-                        RecipeListView(category: category, recipes: recipes.filter { $0.categories?.contains(category) ?? false })
+                        RecipeListView(category: category, recipes: category.recipes ?? [])
                     } label: {
-                        Text("\(category.name)")
+                        Text("\(category.name) (\(category.recipes?.count ?? 0))")
                     }
                 }
-                
-                
-
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
                 ToolbarItem {
-                    Button(action: addItem) {
+                    Button(action: {isCreateRecipeShowing = true}) {
                         Label("Add Recipe", systemImage: "plus")
                     }
                 }
             }
+            .navigationTitle("David's Recipes")
+            .sheet(isPresented: $isCreateRecipeShowing) {
+                CreateRecipeView()
+            }
+        }
+        content: {
+            RecipeListView(category: Category(name: "All recipes"), recipes: viewModel.recipes)
+            .searchable(text: $searchString)
         } detail: {
             Text("Select a Recipe")
         }
+        
+        
     }
 
     private func addItem() {
-        withAnimation {
-            print("making new item")
-            let newItem = Recipe(title: "cool recipe \(Int.random(in: 1..<100))", ingredients: [Ingredient(name: "Garlic", unit: Unit(name: "clove(s)", type: Unit.UnitType.nonConvertable), amount: 2)], instructions: ["some instructions"])
-            modelContext.insert(newItem)
-        }
+        viewModel.addRecipe(recipe: Recipe(title: "Cookies", ingredients: [Ingredient(name: "eggs", unit: "", amount: 2), Ingredient(name: "chocolate chips", unit: "cups", amount: 1)], instructions: ["Make cookies", "eat cookies"], prepTime: 900, cookTime: 1200, serves: 4, author: "David Thompson"), categoryNames: ["Dessert", "Favorite"] )
     }
 
     private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(recipes[index])
-            }
-        }
+        viewModel.deleteRecipes(offsets: offsets)
     }
 }
 

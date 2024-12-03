@@ -8,29 +8,28 @@
 import SwiftUI
 
 struct RecipeListView: View {
-    @Environment(\.modelContext) private var modelContext
+    @Environment(RecipeViewModel.self) private var viewModel
     
     let category: Category?
     let recipes: [Recipe]
     
     var body: some View {
-                ForEach(recipes) { recipe in
-                    NavigationLink {
-                        Text("Recipe \(recipe.title)")
-                    } label: {
-                        Text("\(recipe.title)")
-                    }
+        List {
+            ForEach(recipes) { recipe in
+                NavigationLink {
+                    RecipePage(recipe: recipe)
+                } label: {
+                    Text("\(recipe.title)")
                 }
-                .onDelete(perform: deleteItems)
+            }
+            .onDelete(perform: deleteItems)
+        }
+        .navigationTitle(category?.name ?? "All Recipes")
     }
     
     
     private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(recipes[index])
-            }
-        }
+        viewModel.deleteRecipes(offsets: offsets)
     }
 }
 
@@ -40,7 +39,7 @@ struct RecipeListView: View {
         recipes:[
             Recipe(
                 title: "Quiche Lorraine",
-                ingredients: [Ingredient(name: "Gruyere cheese", unit: Unit(name: "g", type: Unit.UnitType.convertable), amount: 150.0)],
+                ingredients: [Ingredient(name: "Gruyere cheese", unit: "g", amount: 150.0)],
                 instructions: ["Make the Quiche", "Eat the quiche"]),
             Recipe(title: "Cake", ingredients: [], instructions: []),
             Recipe(title: "Pizza", ingredients: [], instructions: [])

@@ -12,6 +12,8 @@ import SwiftData
 final class Category {
     var name: String
     
+    var recipes: [Recipe]?
+    
     init(name: String) {
         self.name = name
     }

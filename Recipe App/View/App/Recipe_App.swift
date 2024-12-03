@@ -10,23 +10,27 @@ import SwiftData
 
 @main
 struct Recipe_App: App {
-//    var sharedModelContainer: ModelContainer = {
-//        let schema = Schema([
-//            Item.self,
-//        ])
-//        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-//
-//        do {
-//            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-//        } catch {
-//            fatalError("Could not create ModelContainer: \(error)")
-//        }
-//    }()
-
+    let container: ModelContainer
+    let viewModel: RecipeViewModel
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: [Recipe.self, Category.self])
+        .modelContainer(container)
+        .environment(viewModel)
+    }
+    
+    init() {
+        do {
+            container = try ModelContainer(for: Recipe.self)
+        } catch {
+            fatalError("""
+                    Failed to create ModelContainer for Recipe. 
+                    If you made a change to the Model, then uninstall 
+                    the app and restart it from Xcode
+                    """)
+        }
+        viewModel = RecipeViewModel(context: container.mainContext)
     }
 }

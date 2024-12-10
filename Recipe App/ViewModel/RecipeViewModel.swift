@@ -31,15 +31,36 @@ import SwiftData
     
     private(set) var categories: [Category] = []
     
+    // MARK: - Public Helpers
+    
+    func getCategoriesToAdd(_ categoryNames: [String]) -> [Category] {
+        var categoriesToAdd: [Category] = []
+        for category in categoryNames {
+            if let existingCategory = fetchCategory(named: category) {
+                categoriesToAdd.append(existingCategory)
+            } else {
+                let newCategory = Category(name: category)
+                categoriesToAdd.append(newCategory)
+            }
+        }
+        return categoriesToAdd
+    }
+    
     // MARK: - Private Helpers
+    
+    
+    func saveAllChanges() {
+        try? modelContext.save()
+    }
     
     private func fetchData() {
         fetchRecipes()
-        fetchCategories()
+        fetchCategories()		
+        fetchFavorites()
     }
     
     private func fetchCategories() {
-        try? modelContext.save()
+        saveAllChanges()
         
         do {
             let descriptor = FetchDescriptor<Category>(sortBy: [SortDescriptor(\.name)])
@@ -68,18 +89,17 @@ import SwiftData
     }
     
     private func fetchRecipes() {
-        try? modelContext.save()
         
         do {
             let descriptor = FetchDescriptor<Recipe>(sortBy: [SortDescriptor(\.title)])
             
             recipes = try modelContext.fetch(descriptor)
         } catch {
-            print("Failed to load recipes")
+            print("Failed to load recipes: \(error)")
         }
     }
     
-    private func fetchFavorties() {
+    private func fetchFavorites() {
         do {
             let descriptor = FetchDescriptor<Recipe>(
                 predicate: #Predicate {$0.isFavorite},
@@ -87,32 +107,31 @@ import SwiftData
             )
             favorites = try modelContext.fetch(descriptor)
         } catch {
-            print("Failed to load favorites")
+            print("Failed to load favorites: \(error)`")
         }
     }
     
-    // MARK: - User Intents
     
+    
+    // MARK: - User Intents
+
+    
+    func updateRecipe(_ recipe: Recipe) {
+        saveAllChanges()
+        fetchData()
+    }
     
     func addRecipe(recipe: Recipe, categoryNames: [String]) {
         withAnimation {
             print("making new item")
-            var categoriesToAdd: [Category] = []
-            for category in categoryNames {
-                if let existingCategory = fetchCategory(named: category) {
-                    categoriesToAdd.append(existingCategory)
-                } else {
-                    let newCategory = Category(name: category)
-                    categoriesToAdd.append(newCategory)
-                }
-            }
-            
+            let categoriesToAdd = getCategoriesToAdd(categoryNames)
             recipe.categories.append(contentsOf: categoriesToAdd)
             
             modelContext.insert(recipe)
             fetchData()
         }
     }
+    
     
     func deleteRecipes(offsets: IndexSet) {
         withAnimation {
@@ -123,7 +142,9 @@ import SwiftData
     }
     
     func toggleFavorite(for recipe: Recipe) {
-        
+        withAnimation {
+            
+        }
     }
 }
 

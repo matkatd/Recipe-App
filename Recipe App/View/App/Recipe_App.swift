@@ -13,9 +13,14 @@ struct Recipe_App: App {
     let container: ModelContainer
     let viewModel: RecipeViewModel
     
+    
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .task {
+                    seedDatabase(viewModel: viewModel)
+                }
         }
         .modelContainer(container)
         .environment(viewModel)

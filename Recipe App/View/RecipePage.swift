@@ -11,30 +11,38 @@ struct RecipePage: View {
     @Environment(RecipeViewModel.self) private var viewModel
     let recipe: Recipe
     
+    @State private var isEditRecipeShowing = false
+    
     var body: some View {
-        VStack(alignment: .leading) {
-            // Categories Section
-            Text("Categories:")
-                .font(.title2)
-                .padding(.top, 16)
-                .fontWeight(.bold)
-            HStack {
-                ForEach(recipe.categories) { category in
-                    Text(category.name)
-                        .padding(10)
-                        .background(Color(.cyan))
-                        .cornerRadius(8)
-                }
-            }
-            .padding(.bottom, 16)
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading) {
+                    // Categories Section
+                    Text("Categories:")
+                        .font(.title2)
+                        .padding(.top, 16)
+                        .fontWeight(.bold)
+                    HStack {
+                        ForEach(recipe.categories) { category in
+                            Text(category.name)
+                                .padding(10)
+                                .background(Color(.cyan))
+                                .cornerRadius(8)
+                        }
+                    }
+                    .padding(.bottom, 16)
 
-            detailsSection
-            ingredientsSection
-            directionsSection
+                    detailsSection
+                    ingredientsSection
+                    directionsSection
+                    
+                    Spacer()
+                }
+                .padding()
+            }
+            .navigationTitle(recipe.title)
             
-            Spacer()
         }
-        .navigationTitle(recipe.title)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: favoriteRecipe) {
@@ -42,30 +50,37 @@ struct RecipePage: View {
                 }
             }
             ToolbarItem {
-                EditButton()
+                Button(action: {
+                    isEditRecipeShowing = true
+                }) {
+                    Label("Edit Recipe", systemImage: "pencil")
+                }
             }
-            
-            
         }
-        .padding()
-        .frame(maxHeight: .infinity, alignment: .top) // Fill vertical space and align to top
-        .background(Color(.systemBackground)) // Optional: Set background color
+        .sheet(isPresented: $isEditRecipeShowing) {
+            CreateRecipeView(editRecipe: self.recipe, onClose: { isEditRecipeShowing = false })
+        }
+
     }
     
     var detailsSection: some View {
-        // Recipe Info Section
         VStack(alignment: .leading, spacing: 8) {
             Text("Details")
             Divider()
-            Text("Prep Time: \(formattedTime(recipe.prepTime))")
+            Text("Prep Time: \(recipe.prepTime.formattedTime()) min")
                 .font(.subheadline)
-            Text("Cook Time: \(formattedTime(recipe.cookTime))")
+            Text("Cook Time: \(recipe.cookTime.formattedTime()) min")
                 .font(.subheadline)
-            Text("Serves: \(recipe.serves ?? 0)")
+            Text("Serves: \(recipe.serves)")
                 .font(.subheadline)
-            Text("Author: \(recipe.author ?? "Unknown")")
+            Text("Difficulty: \(String(describing: recipe.difficulty))")
                 .font(.subheadline)
-                .foregroundColor(.secondary)
+            Text("Author: \(recipe.author)")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            Text("Date Created: \(recipe.dateCreated)")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
         }
         .padding()
         .background(Color(.systemGray6))
@@ -74,7 +89,6 @@ struct RecipePage: View {
     }
     
     var ingredientsSection: some View {
-        
         VStack(alignment: .leading, spacing: 8) {
             Text("Ingredients:")
                 .font(.title2)
@@ -87,9 +101,7 @@ struct RecipePage: View {
     }
     
     var directionsSection: some View {
-        
         VStack(alignment: .leading, spacing: 8) {
-            // Instructions Section
             Text("Instructions:")
                 .font(.title2)
                 .padding(.top, 16)
@@ -106,14 +118,14 @@ struct RecipePage: View {
             }
         }
     }
-    private func formattedTime(_ time: TimeInterval?) -> String {
-        guard let time = time else { return "N/A" }
-        let minutes = Int(time / 60)
-        return "\(minutes) min"
-    }
+
     
     private func formattedIngredient(_ ingredient: Ingredient) -> String {
-        "• \(ingredient.amount.formatted()) \(ingredient.unit) \(ingredient.name)"
+        if (ingredient.unit != nil) {
+            "• \(ingredient.amount.formatted()) \(ingredient.unit ?? "") \(ingredient.name)"
+        } else {
+            "• \(ingredient.amount.formatted()) \(ingredient.name)"
+        }
     }
     
     private func favoriteRecipe() {
@@ -132,7 +144,8 @@ struct RecipePage: View {
         prepTime: 10.0,
         cookTime: 10.0,
         serves: 4,
-        author: "David Thompson"
+        author: "David Thompson",
+        difficulty: Difficulty.Intermediate
     )
     )
 }

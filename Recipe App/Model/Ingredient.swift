@@ -11,7 +11,7 @@ import SwiftData
 @Model
 final class Ingredient {
     var name: String
-    var unit: String
+    var unit: String?
     var amount: Double
     
     var recipe: Recipe?
@@ -19,6 +19,11 @@ final class Ingredient {
     init(name: String, unit: String, amount: Double) {
         self.name = name
         self.unit = unit
+        self.amount = amount
+    }
+    
+    init(name: String, amount: Double) {
+        self.name = name
         self.amount = amount
     }
 }

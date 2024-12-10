@@ -16,10 +16,12 @@ final class Recipe: Identifiable {
     var instructions: [String]
     @Relationship(inverse: \Category.recipes)
     var categories: [Category] = []
-    var prepTime: TimeInterval?
-    var cookTime: TimeInterval?
-    var serves: Int?
-    var author: String?
+    var prepTime: TimeInterval
+    var cookTime: TimeInterval
+    var serves: Int
+    var author: String
+    var dateCreated: Date = Date()
+    var difficulty: Difficulty
     var isFavorite: Bool
     
 
@@ -28,10 +30,11 @@ final class Recipe: Identifiable {
         title: String,
         ingredients: [Ingredient],
         instructions: [String],
-        prepTime: TimeInterval? = nil,
-        cookTime: TimeInterval? = nil,
-        serves: Int? = nil,
-        author: String? = nil,
+        prepTime: TimeInterval = 0,
+        cookTime: TimeInterval = 0,
+        serves: Int = 0,
+        author: String = "",
+        difficulty: Difficulty,
         isFavorite: Bool = false
     ) {
         self.title = title
@@ -41,6 +44,13 @@ final class Recipe: Identifiable {
         self.cookTime = cookTime
         self.serves = serves
         self.author = author
+        self.difficulty = difficulty
         self.isFavorite = isFavorite
+    }
+}
+
+extension Recipe {
+    func categoryList() -> String {
+        return categories.map { $0.name }.joined(separator: ", ")
     }
 }

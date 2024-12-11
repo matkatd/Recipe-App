@@ -69,7 +69,6 @@ struct ContentView: View {
                             primaryToolbar
                         }
                         .navigationTitle(category.name)
-                        
                 } label: {
                     Text("\(category.name) (\(category.recipes?.count ?? 0))")
                 }

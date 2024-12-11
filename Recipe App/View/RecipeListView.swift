@@ -13,7 +13,7 @@ struct RecipeListView: View {
     
     let category: Category?
     
-    @State var recipes: [Recipe]
+    let recipes: [Recipe]
     
     
     @State private var searchText: String = ""
@@ -32,7 +32,6 @@ struct RecipeListView: View {
     
     var body: some View {
         List {
-
             ForEach(filteredItems) { recipe in
                 NavigationLink {
                     RecipePage(recipe: recipe)

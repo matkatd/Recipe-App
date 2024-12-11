@@ -14,35 +14,35 @@ struct RecipePage: View {
     @State private var isEditRecipeShowing = false
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    // Categories Section
-                    Text("Categories:")
-                        .font(.title2)
-                        .padding(.top, 16)
-                        .fontWeight(.bold)
-                    HStack {
-                        ForEach(recipe.categories) { category in
-                            Text(category.name)
-                                .padding(10)
-                                .background(Color(.cyan))
-                                .cornerRadius(8)
-                        }
+        
+        ScrollView {
+            VStack(alignment: .leading) {
+                // Categories Section
+                Text("Categories:")
+                    .font(.title2)
+                    .padding(.top, 16)
+                    .fontWeight(.bold)
+                HStack {
+                    ForEach(recipe.categories) { category in
+                        Text(category.name)
+                            .padding(10)
+                            .background(Color(.cyan))
+                            .cornerRadius(8)
                     }
-                    .padding(.bottom, 16)
-
-                    detailsSection
-                    ingredientsSection
-                    directionsSection
-                    
-                    Spacer()
                 }
-                .padding()
+                .padding(.bottom, 16)
+                
+                detailsSection
+                ingredientsSection
+                directionsSection
+                
+                Spacer()
             }
-            .navigationTitle(recipe.title)
-            
+            .padding()
         }
+        .navigationTitle(recipe.title)
+        
+        
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: favoriteRecipe) {
@@ -60,7 +60,7 @@ struct RecipePage: View {
         .sheet(isPresented: $isEditRecipeShowing) {
             CreateRecipeView(editRecipe: self.recipe, onClose: { isEditRecipeShowing = false })
         }
-
+        
     }
     
     var detailsSection: some View {
@@ -118,7 +118,7 @@ struct RecipePage: View {
             }
         }
     }
-
+    
     
     private func formattedIngredient(_ ingredient: Ingredient) -> String {
         if (ingredient.unit != nil) {
@@ -129,6 +129,7 @@ struct RecipePage: View {
     }
     
     private func favoriteRecipe() {
+        recipe.isFavorite.toggle()
         viewModel.toggleFavorite(for: recipe)
     }
 }

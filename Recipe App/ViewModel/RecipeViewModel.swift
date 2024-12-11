@@ -65,7 +65,15 @@ import SwiftData
         do {
             let descriptor = FetchDescriptor<Category>(sortBy: [SortDescriptor(\.name)])
             
-            categories = try modelContext.fetch(descriptor)
+            // filter out categories with no recipes
+            let result = try modelContext.fetch(descriptor)
+            categories = result.filter { category in
+                if let recipes = category.recipes {
+                    return !recipes.isEmpty
+                } else {
+                    return false
+                }
+            }
         } catch {
             print("Failed to load categories")
         }
@@ -143,7 +151,7 @@ import SwiftData
     
     func toggleFavorite(for recipe: Recipe) {
         withAnimation {
-            
+            updateRecipe(recipe)
         }
     }
 }

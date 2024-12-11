@@ -34,22 +34,26 @@ struct CreateIngredientView: View {
                         Button(action: {
                             guard !name.isEmpty else { return }
                             
+                            let ingredient = ingredient ?? Ingredient(name: name, unit: unit, amount: Double(amount) ?? 0)
+                            ingredient.name = name
+                            ingredient.unit = unit
                             
                             guard let amountValue = Double(amount) else {
                                 let fractionParts = amount.split(separator: "/").compactMap { Double($0) }
-                                
+                                                    
                                 if fractionParts.count == 2 {
                                     let numerator = fractionParts[0]
                                     let denominator = fractionParts[1]
                                     let result = numerator / denominator
-                                    onSave(Ingredient(name: name, unit: unit, amount: result))
+                                    ingredient.amount = result
+                                    onSave(ingredient)
                                     return
                                 }
                                 print("Invalid quantity input: \(amount)") // Debug output
                                 return
                             }
                             
-                            let ingredient = Ingredient(name: name, unit: unit, amount: amountValue)
+                            ingredient.amount = amountValue
                             onSave(ingredient)
                         }) {
                             HStack {

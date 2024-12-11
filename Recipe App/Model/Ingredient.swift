@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Ingredient {
+final class Ingredient: Identifiable {
     var name: String
     var unit: String?
     var amount: Double

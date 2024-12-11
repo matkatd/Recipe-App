@@ -22,7 +22,7 @@ struct CreateInstructionView: View {
             Form {
                 Section("Instruction") {
                     TextField("Enter the next step", text: $text)
-                    Divider()
+                    
                     Button(action: {
                         guard !text.isEmpty else { return }
                         onSave(text)

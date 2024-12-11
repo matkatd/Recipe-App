@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		45A95D112CE6580700BAFE9B /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 45A95D102CE6580700BAFE9B /* MarkdownUI */; };
+		45D48F142D090CD700C7F74A /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 45D48F132D090CD700C7F74A /* SwiftUIX */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45A95D112CE6580700BAFE9B /* MarkdownUI in Frameworks */,
+				45D48F142D090CD700C7F74A /* SwiftUIX in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +73,7 @@
 			name = "Recipe App";
 			packageProductDependencies = (
 				45A95D102CE6580700BAFE9B /* MarkdownUI */,
+				45D48F132D090CD700C7F74A /* SwiftUIX */,
 			);
 			productName = "Recipe App";
 			productReference = 45A95CFC2CE64A3000BAFE9B /* Recipe App.app */;
@@ -102,6 +105,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				45A95D0F2CE6580700BAFE9B /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				45D48F122D090CD700C7F74A /* XCRemoteSwiftPackageReference "SwiftUIX" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 45A95CFD2CE64A3000BAFE9B /* Products */;
@@ -341,6 +345,14 @@
 				minimumVersion = 2.4.1;
 			};
 		};
+		45D48F122D090CD700C7F74A /* XCRemoteSwiftPackageReference "SwiftUIX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftUIX/SwiftUIX";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -348,6 +360,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 45A95D0F2CE6580700BAFE9B /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
+		};
+		45D48F132D090CD700C7F74A /* SwiftUIX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45D48F122D090CD700C7F74A /* XCRemoteSwiftPackageReference "SwiftUIX" */;
+			productName = SwiftUIX;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

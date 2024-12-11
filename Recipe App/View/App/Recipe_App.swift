@@ -14,7 +14,7 @@ struct Recipe_App: App {
     let viewModel: RecipeViewModel
     
     
-    
+       
     var body: some Scene {
         WindowGroup {
             ContentView()

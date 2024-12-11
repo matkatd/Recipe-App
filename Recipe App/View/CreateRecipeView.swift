@@ -212,11 +212,13 @@ struct CreateRecipeView: View {
         if isEditing {
             if let recipeToEdit = editRecipe {
                 recipeToEdit.author = author
-                recipeToEdit.cookTime = Double(cookTime) ?? 0
+                // We are multiplying by 60 to make it back into a proper TimeInterval
+                // Since TimeIntervals store seconds
+                recipeToEdit.cookTime = (Double(cookTime) ?? 0) * 60
                 recipeToEdit.difficulty = difficulty
                 recipeToEdit.ingredients = ingredients
                 recipeToEdit.instructions = instructions
-                recipeToEdit.prepTime = Double(prepTime) ??  0
+                recipeToEdit.prepTime = (Double(prepTime) ?? 0) * 60
                 recipeToEdit.serves = Int(servings) ?? 0
                 recipeToEdit.title = title
                 recipeToEdit.categories = stringToCategories(categories)
